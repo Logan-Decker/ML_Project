@@ -41,7 +41,7 @@
 % Of note is the shared affiliation of the first two authors, and the "authornote" and "authornotemark" commands
 % used to denote shared contribution to the research.
 
-\author{Yumin Xu, Michael Vigil, Logan Decker}
+\author{Logan Decker, Michael Vigil, Yumin Xu}
 \affiliation{%
   \institution{New Mexico Institute of Mining and Technology\\
     Fall 2021 - CSE-589-Predictive Data Analytics}
@@ -90,8 +90,12 @@
 \subsection{Naive Bayes}
 
 \subsubsection{Dota 2 Data Set }
+Training this data set was generally quite easy. Due to the nature of the data set we used, the data for Defense of the Ancients 2 was already split into training and testing data sets. However, because this split did not represent the 80-20 proportions that we wanted to work with, we needed to re-combine these data sets and then re-split them after preprocessing. Preprocessing this data wasn't complex, as all that needed to be done was change the '-1' values to '0' values for the 'Win' category, and then convert the '0' and '1' values to 'FALSE' and 'TRUE' values, respectively. Additionally, all non-win categories were normalized to be within the range of 0 to 1.\\
+After this setup, a random sample of roughly $80\%$ of all data points were selected to comprise the training set, while the remaining $20\%$ formed the testing set. The Naive Bayes model was then trained on this training set. This sampling and training process was performed 100 separate times in order to find a relatively high-quality model.
 
 \subsubsection{LoL Data Set}
+Training this data set was also generally quite easy. The League of Legends data set that we used had included Riot Game ID values for each of the data points, which we removed as a part of preprocessing. Other than that, the same conversion of '0' and '1' values to 'FALSE' and 'TRUE' values (respectively) for the 'Win' category was performed, and the normalization to values between 0 and 1 for all non-win categories was also performed.\\
+After this setup, the process was nearly identical to that performed while training the DotA2 set. For 100 iterations, the data set was split randomly into 80-20 proportions where the larger portion was used for training the Naive Bayes model.
 
 \section{Evaluating Model}
 
@@ -110,8 +114,50 @@
 \subsection{Naive Bayes}
 
 \subsubsection{Dota 2 Data Set }
+In order to determine a relatively high-quality model, the training and evaluation phases were performed 100 times. Each time, the F1 score of the model would be calculated. At any point in the iterative process where the current F1 score was better than the previous best-recorded F1 score, the best F1 score and its corresponding data and model were saved. Doing this allowed for us to find the best model out of 100 random samples.\\
+The best model that we were able to generate based on our data didn't perform very well. The following table shows its performance.\\
+\begin{center}
+DotA2 Prediction Metrics\\
+$\begin{tabular}{l|l}
+F1 Score & 0.5444952 \\ \hline
+Accuracy & 0.5639419 \\ \hline
+Precision & 0.5375676 \\ \hline
+Recall & 0.5516036 \\
+\end{tabular}$
+\end{center}\\
+The following is that same model's confusion matrix.\\
+\begin{center}
+DotA2 Prediction Confusion Matrix\\
+$\begin{tabular}{c|c|c}
+ & False & True \\ \hline
+False & 5366 & 4362 \\ \hline
+True & 4616 & 6245 \\
+\end{tabular}$
+\end{center}\\
+As can be seen by the above two tables, even the best Naive Bayes model that we could generate from this data performed poorly. With overall scores of just over 0.5, this model is only barely better than randomly guessing the outcome of a game of DotA2. We suspect that this is primarily due to the nature of the data set that we used, as it relies heavily upon hero selection as opposed to other factors that can only be determined once the game has begun. It would seem that attempting to predict results before matches begin is extremely difficult at best.
 
 \subsubsection{LoL Data Set}
+Just like the DotA2 data training and evaluation, the training and evaluation phases were performed 100 times. Each time, the F1 score of the model would be calculated. At any point in the iterative process where the current F1 score was better than the previous best-recorded F1 score, the best F1 score and its corresponding data and model were saved. Doing this allowed for us to find the best model out of 100 random samples.\\
+The best model that we were able to generate based on our data performed somewhat well. The following table shows its performance.\\
+\begin{center}
+LoL Prediction Metrics\\
+$\begin{tabular}{l|l}
+F1 Score & 0.7480993 \\ \hline
+Accuracy & 0.7484818 \\ \hline
+Precision & 0.7343284 \\ \hline
+Recall & 0.7623967 \\
+\end{tabular}$
+\end{center}\\
+The following is that same model's confusion matrix.\\
+\begin{center}
+LoL Prediction Confusion Matrix\\
+$\begin{tabular}{c|c|c}
+ & False & True \\ \hline
+False & 738 & 230 \\ \hline
+True & 267 & 741 \\
+\end{tabular}$
+\end{center}\\
+As can be seen by the above two tables, the best Naive Bayes model we could generate performed reasonably well. With overall scores hovering right near 0.75, this model can more-often-than-not predict the outcome of a game. We suspect that this better performance relative to the DotA2 model is due to the nature of this data set, as it focuses heavily on data collected once 10 minutes have passed in each game. Though this is still usually somewhat early in the game (most League of Legends games tend to average between 25 and 30 minutes at this tier), it would seem that enough has occurred in order to make a reasonable guess as to which team is going to win.
 
 \section{Comparing}
 
